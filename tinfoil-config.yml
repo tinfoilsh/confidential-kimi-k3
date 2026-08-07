@@ -27,6 +27,8 @@ containers:
         "/tinfoil/mpk/mpk-7f2fefd20580bdee219185fc1c3bc17a4e9eee1302778553406055701d1de6fa",
         "--kv-cache-dtype",
         "fp8",
+        "--attention-config",
+        '{"use_prefill_query_quantization":true,"mla_prefill_backend":"flashinfer"}',
         "--tensor-parallel-size",
         "8",
         "--enable-expert-parallel",
