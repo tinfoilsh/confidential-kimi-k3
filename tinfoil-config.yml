@@ -22,24 +22,19 @@ containers:
       - RUNAI_STREAMER_CONCURRENCY: "8"
       - VLLM_ALLREDUCE_USE_SYMM_MEM: "0"
       - VLLM_ENGINE_READY_TIMEOUT_S: "3600"
-      # K3 latent-MoE tail fusion needs NVLS multicast, unavailable under TDX
-      - VLLM_USE_V2_MODEL_RUNNER: "1"
-      - VLLM_USE_RUST_FRONTEND: "1"
     command:
       [
         "--model",
         "/tinfoil/mpk/mpk-7f2fefd20580bdee219185fc1c3bc17a4e9eee1302778553406055701d1de6fa",
-        "--kv-cache-dtype",
-        "fp8",
-        "--attention-config",
-        '{"use_prefill_query_quantization":true,"mla_prefill_backend":"flashinfer"}',
         "--tensor-parallel-size",
         "8",
-        "--gpu-memory-utilization",
-        "0.95",
+        "--attention-backend",
+        "TRITON_MLA",
         "--max-model-len",
-        "1048576",
-        "--enable-prefix-caching",
+        "262144",
+        "--max-num-seqs",
+        "32",
+        "--enforce-eager",
         "--no-enable-flashinfer-autotune",
         "--tool-call-parser",
         "kimi_k3",
