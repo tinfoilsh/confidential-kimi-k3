@@ -10,7 +10,7 @@ models:
 
 containers:
   - name: "kimi-k3"
-    image: "ghcr.io/tinfoilsh/confidential-kimi-k3@sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    image: "ghcr.io/tinfoilsh/confidential-kimi-k3@sha256:c014852ffaac8568f36cf71b76d26f99adc2fbf210fece2da68c07c3f72d9cad" # v0.0.2
     runtime: nvidia
     gpus: all
     restart: always
@@ -21,21 +21,19 @@ containers:
       - RUNAI_STREAMER_MEMORY_LIMIT: "4294967296"
       - RUNAI_STREAMER_CONCURRENCY: "8"
       - VLLM_ALLREDUCE_USE_SYMM_MEM: "0"
-      - VLLM_ENGINE_READY_TIMEOUT_S: "3600"
     command:
       [
         "--model",
         "/tinfoil/mpk/mpk-7f2fefd20580bdee219185fc1c3bc17a4e9eee1302778553406055701d1de6fa",
+        "--kv-cache-dtype",
+        "fp8",
+        "--attention-config",
+        '{"use_prefill_query_quantization":true,"mla_prefill_backend":"flashinfer"}',
         "--tensor-parallel-size",
         "8",
-        "--attention-backend",
-        "TRITON_MLA",
-        "--max-model-len",
-        "262144",
-        "--max-num-seqs",
-        "32",
-        "--enforce-eager",
-        "--no-enable-flashinfer-autotune",
+        "--enable-expert-parallel",
+        "--mm-encoder-tp-mode",
+        "data",
         "--tool-call-parser",
         "kimi_k3",
         "--enable-auto-tool-choice",
@@ -54,6 +52,10 @@ containers:
         "--disable-custom-all-reduce",
         "--compilation-config",
         '{"pass_config":{"fuse_allreduce_rms":false}}',
+        "--max-model-len",
+        "262144",
+        "--max-num-seqs",
+        "32",
       ]
     tmpfs:
       /tmp: size=512m,mode=1777,exec
