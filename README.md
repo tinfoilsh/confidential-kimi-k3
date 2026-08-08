@@ -7,8 +7,11 @@ Kimi K3 (2.8T-parameter MoE, MXFP4, multimodal) served with vLLM on a single
 Deviations from the recipe for confidential computing:
 
 - `--disable-custom-all-reduce`, `VLLM_ALLREDUCE_USE_SYMM_MEM=0`, and
-  `fuse_allreduce_rms: false` — TDX blocks peer-mapped GPU memory, so all
+  `fuse_allreduce_rms: false` — peer-mapped GPU memory is unavailable, so all
   cross-GPU communication goes through NCCL.
+- `patches/0001` replaces vLLM's UVA zero-copy host buffers with device
+  mirrors: GPU reads of host-mapped memory return corrupt values in this
+  environment, which surfaced as NaN logits and garbage output.
 - Single-node only: no `--all2all-backend` (the RDMA and one-sided NVLink
   backends are for multi-node deployments).
 - Model weights load from a dm-verity-protected model pack
