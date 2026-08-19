@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1.6
 #
 # Confidential Kimi K3 (single-node 8-GPU, MXFP4).
-# Base is digest-pinned for attestation. Upstream K3 image requires CUDA 13
-# and an r580+ guest driver.
-ARG VLLM_BASE_IMAGE=vllm/vllm-openai:kimi-k3@sha256:fb16b180bd9727600067e16fcd6a6de43fb4db1baf4298ef20b4dbdf6bfa5a0e
+# Base is digest-pinned for attestation. K3 requires CUDA 13 and an r580+
+# guest driver (base ships torch cu130).
+ARG VLLM_BASE_IMAGE=vllm/vllm-openai:v0.27.1@sha256:c2f3b1b964e47809b722b5e75b61b1e7b39a50f70388cf2bf2418f16a9f31da2
 FROM ${VLLM_BASE_IMAGE}
 
 # Patches are -p1 unified diffs rooted at /; they target

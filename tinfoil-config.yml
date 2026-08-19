@@ -10,7 +10,7 @@ models:
 
 containers:
   - name: "kimi-k3"
-    image: "ghcr.io/tinfoilsh/confidential-kimi-k3@sha256:c014852ffaac8568f36cf71b76d26f99adc2fbf210fece2da68c07c3f72d9cad" # v0.0.2
+    image: "ghcr.io/tinfoilsh/confidential-kimi-k3@sha256:5fdb3581961426e4948eb73198074e0ac12c2b572240bd3aefe228fa8269b24f" # v0.0.4 (rewritten at release)
     runtime: nvidia
     gpus: all
     restart: always
@@ -21,6 +21,8 @@ containers:
       - RUNAI_STREAMER_MEMORY_LIMIT: "4294967296"
       - RUNAI_STREAMER_CONCURRENCY: "8"
       - VLLM_ALLREDUCE_USE_SYMM_MEM: "0"
+      - VLLM_ENGINE_READY_TIMEOUT_S: "3600"
+      - VLLM_USE_V2_MODEL_RUNNER: "1"
     command:
       [
         "--model",
@@ -56,6 +58,10 @@ containers:
         "262144",
         "--max-num-seqs",
         "32",
+        "--enable-prefix-caching",
+        "--mamba-cache-mode",
+        "align",
+        "--no-enable-flashinfer-autotune",
       ]
     tmpfs:
       /tmp: size=512m,mode=1777,exec
