@@ -7,6 +7,9 @@ models:
   - name: "kimi-k3"
     repo: "moonshotai/Kimi-K3@9f62e4e9fffbd0a83ddd60e1c209d828994b3569"
     mpk: "7f2fefd20580bdee219185fc1c3bc17a4e9eee1302778553406055701d1de6fa_1560999030784_4fac69fe-7f94-5a1c-ad3e-a7917325a51b"
+  - name: "kimi-k3-speculator"
+    repo: "RedHatAI/Kimi-K3-speculator.dspark@48beb88daae33227c148ea2b78a2ac2f493dbccb"
+    mpk: "df312ac14c7cbb9dd4a2d27cfebbd3008f17533872a2458d13856ce9b99dc219_9489838080_f8ccdb52-9bbb-5c6d-85c2-27a93ef9fd9c"
 
 containers:
   - name: "kimi-k3"
@@ -62,6 +65,8 @@ containers:
         "--mamba-cache-mode",
         "align",
         "--no-enable-flashinfer-autotune",
+        "--speculative-config",
+        '{"model":"/tinfoil/mpk/mpk-df312ac14c7cbb9dd4a2d27cfebbd3008f17533872a2458d13856ce9b99dc219","num_speculative_tokens":8,"method":"dspark","draft_sample_method":"probabilistic","rejection_sample_method":"block"}',
       ]
     tmpfs:
       /tmp: size=512m,mode=1777,exec
