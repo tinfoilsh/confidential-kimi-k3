@@ -10,6 +10,7 @@ models:
 
 containers:
   - name: "kimi-k3"
+    models: ["kimi-k3"]
     image: "ghcr.io/tinfoilsh/confidential-kimi-k3@sha256:c014852ffaac8568f36cf71b76d26f99adc2fbf210fece2da68c07c3f72d9cad" # v0.0.2
     runtime: nvidia
     gpus: all
@@ -24,7 +25,7 @@ containers:
     command:
       [
         "--model",
-        "/tinfoil/mpk/mpk-7f2fefd20580bdee219185fc1c3bc17a4e9eee1302778553406055701d1de6fa",
+        "/tinfoil/models/kimi-k3",
         "--kv-cache-dtype",
         "fp8",
         "--attention-config",
