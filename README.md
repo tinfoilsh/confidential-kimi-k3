@@ -20,7 +20,12 @@ Deviations from the recipe for confidential computing:
 - `--enable-prefix-caching --mamba-cache-mode align` — vLLM defaults prefix
   caching off for hybrid models (K3 has KDA linear-attention layers), so it
   must be opted into explicitly; K3 supports only the block-aligned KDA
-  state-checkpoint mode.
+  state-checkpoint mode. The upstream Blackwell profile enables prefix
+  caching the same way.
+- `--no-enable-flashinfer-autotune` and `VLLM_ENGINE_READY_TIMEOUT_S=3600`
+  match the upstream recipe's Blackwell profile; `VLLM_USE_V2_MODEL_RUNNER=1`
+  is pinned so an incompatible flag combination fails loudly instead of
+  silently falling back to the V1 runner.
 - Expert parallelism must stay enabled under CC: with EP off, vLLM ≥ 0.27.1
   auto-enables the K3 latent-MoE tail-fusion kernels on SM100, which require
   NVLS multicast and fail engine init in CC mode (multicast is unavailable).
