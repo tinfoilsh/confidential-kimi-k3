@@ -15,9 +15,7 @@ Deviations from the recipe for confidential computing:
 - Single-node only: no `--all2all-backend` (the RDMA and one-sided NVLink
   backends are for multi-node deployments).
 - Model weights load from a dm-verity-protected model pack
-  (`--load-format runai_streamer`), not from the HF hub. The DSpark
-  speculator is a second model pack for the same reason — the upstream
-  recipe references it by HF id.
+  (`--load-format runai_streamer`), not from the HF hub.
 - `--max-model-len 262144` rather than the full 1M context.
 - `--enable-prefix-caching --mamba-cache-mode align` — vLLM defaults prefix
   caching off for hybrid models (K3 has KDA linear-attention layers), so it
