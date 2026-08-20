@@ -62,6 +62,8 @@ containers:
         "--mamba-cache-mode",
         "align",
         "--no-enable-flashinfer-autotune",
+        "--gpu-memory-utilization",
+        "0.95",
       ]
     tmpfs:
       /tmp: size=512m,mode=1777,exec
