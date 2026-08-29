@@ -4,39 +4,8 @@ Kimi K3 (2.8T-parameter MoE, MXFP4, multimodal) served with vLLM on a single
 8-GPU Blackwell Ultra node, following the
 [upstream vLLM recipe](https://recipes.vllm.ai/moonshotai/Kimi-K3).
 
-Deviations from the recipe for confidential computing:
-
-- `--disable-custom-all-reduce`, `VLLM_ALLREDUCE_USE_SYMM_MEM=0`, and
-  `fuse_allreduce_rms: false` — peer-mapped GPU memory is unavailable, so all
-  cross-GPU communication goes through NCCL.
-- `patches/0001` replaces vLLM's UVA zero-copy host buffers with device
-  mirrors: GPU reads of host-mapped memory return corrupt values in this
-  environment, which surfaced as NaN logits and garbage output.
-- Single-node only: no `--all2all-backend` (the RDMA and one-sided NVLink
-  backends are for multi-node deployments).
-- Model weights load from a dm-verity-protected model pack
-  (`--load-format runai_streamer`), not from the HF hub.
-- `--max-model-len 262144` rather than the full 1M context.
-- `--enable-prefix-caching --mamba-cache-mode align` — vLLM defaults prefix
-  caching off for hybrid models (K3 has KDA linear-attention layers), so it
-  must be opted into explicitly; K3 supports only the block-aligned KDA
-  state-checkpoint mode. The upstream Blackwell profile enables prefix
-  caching the same way.
-- `--no-enable-flashinfer-autotune` and `VLLM_ENGINE_READY_TIMEOUT_S=3600`
-  match the upstream recipe's Blackwell profile; `VLLM_USE_V2_MODEL_RUNNER=1`
-  is pinned so an incompatible flag combination fails loudly instead of
-  silently falling back to the V1 runner.
-- Expert parallelism must stay enabled under CC: with EP off, vLLM ≥ 0.27.1
-  auto-enables the K3 latent-MoE tail-fusion kernels on SM100, which require
-  NVLS multicast and fail engine init in CC mode (multicast is unavailable).
-- Do not add CPU weight offloading (`--cpu-offload-gb`): its UVA path is not
-  covered by `patches/0001` (`VLLM_WEIGHT_OFFLOADING_DISABLE_UVA=1` is the
-  escape hatch if ever needed).
-- Off-limits under CC without re-validation (each reaches NVLS/symm-mem
-  multicast, unavailable in this environment): `--decode-context-parallel-size
-  > 1`, `VLLM_KIMI_K3_GEMM_RS=1`, `--moe-backend deep_gemm_mega_moe`, and
-  data parallelism. KV connectors are additionally rejected at startup when
-  combined with `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`.
+The configuration in `tinfoil-config.yml` deviates from the upstream recipe
+where required by this serving environment.
 
 Releases are built and measured by the Tinfoil release workflows; the image
 digest in `tinfoil-config.yml` is pinned at release time.
