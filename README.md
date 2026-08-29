@@ -32,6 +32,11 @@ Deviations from the recipe for confidential computing:
 - Do not add CPU weight offloading (`--cpu-offload-gb`): its UVA path is not
   covered by `patches/0001` (`VLLM_WEIGHT_OFFLOADING_DISABLE_UVA=1` is the
   escape hatch if ever needed).
+- Off-limits under CC without re-validation (each reaches NVLS/symm-mem
+  multicast, unavailable in this environment): `--decode-context-parallel-size
+  > 1`, `VLLM_KIMI_K3_GEMM_RS=1`, `--moe-backend deep_gemm_mega_moe`, and
+  data parallelism. KV connectors are additionally rejected at startup when
+  combined with `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`.
 
 Releases are built and measured by the Tinfoil release workflows; the image
 digest in `tinfoil-config.yml` is pinned at release time.

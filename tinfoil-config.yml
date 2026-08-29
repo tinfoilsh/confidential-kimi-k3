@@ -5,12 +5,12 @@ gpus: 8
 
 models:
   - name: "kimi-k3"
-    repo: "moonshotai/Kimi-K3@9f62e4e9fffbd0a83ddd60e1c209d828994b3569"
-    mpk: "7f2fefd20580bdee219185fc1c3bc17a4e9eee1302778553406055701d1de6fa_1560999030784_4fac69fe-7f94-5a1c-ad3e-a7917325a51b"
+    repo: "moonshotai/Kimi-K3@a590ce090cb049c93a33dfe8c208ec652aa20503"
+    mpk: "58d5e74ba6c814d4cc4511df093ede786bfbc95f766eee7a96379687ce455792_1560999034880_b59ef1dc-a9a1-5af6-8210-988d9d9d610c"
 
 containers:
   - name: "kimi-k3"
-    image: "ghcr.io/tinfoilsh/confidential-kimi-k3@sha256:5fdb3581961426e4948eb73198074e0ac12c2b572240bd3aefe228fa8269b24f" # v0.0.4 (rewritten at release)
+    image: "ghcr.io/tinfoilsh/confidential-kimi-k3@sha256:5fdb3581961426e4948eb73198074e0ac12c2b572240bd3aefe228fa8269b24f" # v0.0.8 (rewritten at release)
     runtime: nvidia
     gpus: all
     restart: always
@@ -26,7 +26,7 @@ containers:
     command:
       [
         "--model",
-        "/tinfoil/mpk/mpk-7f2fefd20580bdee219185fc1c3bc17a4e9eee1302778553406055701d1de6fa",
+        "/tinfoil/mpk/mpk-58d5e74ba6c814d4cc4511df093ede786bfbc95f766eee7a96379687ce455792",
         "--kv-cache-dtype",
         "fp8",
         "--attention-config",
