@@ -3,7 +3,7 @@
 # Confidential Kimi K3 (single-node 8-GPU, MXFP4).
 # Base is digest-pinned for attestation. K3 requires CUDA 13 and an r580+
 # guest driver (base ships torch cu130).
-ARG VLLM_BASE_IMAGE=vllm/vllm-openai:v0.27.1@sha256:c2f3b1b964e47809b722b5e75b61b1e7b39a50f70388cf2bf2418f16a9f31da2
+ARG VLLM_BASE_IMAGE=vllm/vllm-openai:v0.28.0@sha256:2286e8533ca8b6bc777594bae30524f1426ba46ca21797524e06df6a94b06635
 FROM ${VLLM_BASE_IMAGE}
 
 # Patches are -p1 unified diffs rooted at /; they target
