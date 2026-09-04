@@ -41,8 +41,6 @@ containers:
         "--enable-auto-tool-choice",
         "--enable-prompt-tokens-details",
         "--enable-force-include-usage",
-        "--middleware",
-        "tinfoil_usage.UsageMetricsMiddleware",
         "--reasoning-parser",
         "kimi_k3",
         "--served-model-name",
