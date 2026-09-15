@@ -24,6 +24,13 @@ RUN set -eux; \
 # Bake FlashInfer cubins at build time: the enclave has no egress for JIT
 # downloads and the container rootfs is read-only, so the symlinks
 # ensure_symlink() would create at runtime are pre-created here.
+#
+# The download is one multi-architecture publish. We serve Blackwell only
+# (B300 = sm103a, plus the sm100f family binaries), so the Rubin half is dead
+# weight: dropping it removes ~2.9 GB of ~6.6 GB. Prune inside the same RUN,
+# or the bytes still land in the layer. Do not extend this to any Blackwell
+# arch: FLASHINFER_NO_DOWNLOAD turns a missing cubin into a RuntimeError at
+# first use of that kernel, which would surface mid-serving, not at startup.
 RUN set -eux; \
     if ! command -v flashinfer >/dev/null 2>&1; then \
         echo "flashinfer CLI not present; skipping cubin bake"; exit 0; \
@@ -31,6 +38,12 @@ RUN set -eux; \
     flashinfer download-cubin; \
     cubin_dir=$(python3 -c "import flashinfer_cubin, os; print(os.path.join(os.path.dirname(flashinfer_cubin.__file__), 'cubins'))"); \
     du -sh "$cubin_dir"; \
+    find "$cubin_dir" -type f -iname '*sm107a*' -delete; \
+    for a in sm100f sm103a; do \
+        find "$cubin_dir" -type f -iname "*$a*" -name '*.cubin' | head -1 | grep -q . \
+            || { echo "no $a cubins survived the prune; check the arch tokens"; exit 1; }; \
+    done; \
+    echo 'after dropping Rubin (sm107a):'; du -sh "$cubin_dir"; \
     mkdir -p "$cubin_dir/flashinfer/trtllm/batched_gemm" "$cubin_dir/flashinfer/trtllm/gemm"; \
     for d in "$cubin_dir"/*/; do \
         gemm_dir=$(find "$d" -maxdepth 3 -type d -name "trtllmGen_gemm_export" 2>/dev/null | head -1); \
