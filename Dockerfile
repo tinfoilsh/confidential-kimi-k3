@@ -3,7 +3,7 @@
 # Confidential Kimi K3 (single-node 8-GPU, MXFP4).
 # Base is digest-pinned for attestation. K3 requires CUDA 13 and an r580+
 # guest driver (base ships torch cu130).
-ARG VLLM_BASE_IMAGE=vllm/vllm-openai:v0.28.0@sha256:2286e8533ca8b6bc777594bae30524f1426ba46ca21797524e06df6a94b06635
+ARG VLLM_BASE_IMAGE=vllm/vllm-openai:v0.29.0@sha256:082ca6f035279109041ffd3fe0695cb568b29bc580b35c4f297a66a08b216c1b
 ARG SIDECAR_IMAGE=ghcr.io/tinfoilsh/inference-sidecar@sha256:65ce23d6560c46a1e8614ede187fcbf9798b267aa33878905b4872404787f47d
 FROM ${SIDECAR_IMAGE} AS sidecar
 
