@@ -1,20 +1,25 @@
-cvm-version: 0.11.0
-cpus: 32
-memory: 524288
+cvm-version: 0.14.14
+cpus: 112
+memory: 1572864
 gpus: 8
 
 models:
   - name: "kimi-k3"
     repo: "moonshotai/Kimi-K3@a590ce090cb049c93a33dfe8c208ec652aa20503"
     mpk: "58d5e74ba6c814d4cc4511df093ede786bfbc95f766eee7a96379687ce455792_1560999034880_b59ef1dc-a9a1-5af6-8210-988d9d9d610c"
+  - name: kimi-k3-dspark
+    repo: Inferact/Kimi-K3-DSpark@cf6b8244620e7ea4b0651d214f28e89eac75bed6
+    mpk: 2c4e2ba55c4a6636446934db00323a9dc4dafb19fccfca59239432c9ae71f8d4_7124652032_e05d9452-e8bc-5ebe-bcd6-a44a40bf60b4
+    schema: 1
 
 containers:
   - name: "kimi-k3"
-    image: "ghcr.io/tinfoilsh/confidential-kimi-k3@sha256:5fdb3581961426e4948eb73198074e0ac12c2b572240bd3aefe228fa8269b24f" # v0.0.8 (rewritten at release)
+    image: "ghcr.io/tinfoilsh/confidential-kimi-k3@sha256:0000000000000000000000000000000000000000000000000000000000000000" # Rewritten at release.
     runtime: nvidia
     gpus: all
     restart: always
     env:
+      - VLLM_DISABLE_UVA: "1"
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
       - FLASHINFER_NO_DOWNLOAD: "1"
       - NUMBA_CACHE_DIR: "/root/numba-cache"
@@ -31,6 +36,8 @@ containers:
       [
         "--model",
         "/tinfoil/mpk/mpk-58d5e74ba6c814d4cc4511df093ede786bfbc95f766eee7a96379687ce455792",
+        "--speculative-config",
+        '{"model":"/tinfoil/mpk/mpk-2c4e2ba55c4a6636446934db00323a9dc4dafb19fccfca59239432c9ae71f8d4","method":"dspark","num_speculative_tokens":7,"draft_sample_method":"probabilistic","rejection_sample_method":"block"}',
         "--kv-cache-dtype",
         "fp8",
         "--attention-config",
@@ -64,6 +71,8 @@ containers:
         "--max-num-seqs",
         "32",
         "--enable-prefix-caching",
+        "--prefix-match-unit",
+        "128",
         "--mamba-cache-mode",
         "align",
         "--no-enable-flashinfer-autotune",
