@@ -63,6 +63,7 @@ containers:
         "--load-format",
         "runai_streamer",
         "--trust-remote-code",
+        "--trust-request-mm-kwargs",
         "--disable-custom-all-reduce",
         "--compilation-config",
         '{"pass_config":{"fuse_allreduce_rms":false}}',
