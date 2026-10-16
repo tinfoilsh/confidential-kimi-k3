@@ -8,8 +8,8 @@ models:
     repo: "moonshotai/Kimi-K3@a590ce090cb049c93a33dfe8c208ec652aa20503"
     mpk: "58d5e74ba6c814d4cc4511df093ede786bfbc95f766eee7a96379687ce455792_1560999034880_b59ef1dc-a9a1-5af6-8210-988d9d9d610c"
   - name: kimi-k3-dspark
-    repo: Inferact/Kimi-K3-DSpark@cf6b8244620e7ea4b0651d214f28e89eac75bed6
-    mpk: 2c4e2ba55c4a6636446934db00323a9dc4dafb19fccfca59239432c9ae71f8d4_7124652032_e05d9452-e8bc-5ebe-bcd6-a44a40bf60b4
+    repo: RedHatAI/Kimi-K3-speculator.dspark@38a88101e0d46bb22134b9da340f381b954d40d4
+    mpk: e99380779c9921cfdf2dff4ca3b711cda3cc0195e25d9b17633fd191f0ed849c_9489838080_e0171adb-1eda-58a2-aec6-b53125a821dd
     schema: 1
 
 containers:
@@ -37,7 +37,7 @@ containers:
         "--model",
         "/tinfoil/mpk/mpk-58d5e74ba6c814d4cc4511df093ede786bfbc95f766eee7a96379687ce455792",
         "--speculative-config",
-        '{"model":"/tinfoil/mpk/mpk-2c4e2ba55c4a6636446934db00323a9dc4dafb19fccfca59239432c9ae71f8d4","method":"dspark","num_speculative_tokens":7,"draft_sample_method":"probabilistic","rejection_sample_method":"block"}',
+        '{"model":"/tinfoil/mpk/mpk-e99380779c9921cfdf2dff4ca3b711cda3cc0195e25d9b17633fd191f0ed849c","method":"dspark","num_speculative_tokens":8,"draft_sample_method":"probabilistic","rejection_sample_method":"block"}',
         "--kv-cache-dtype",
         "fp8",
         "--attention-config",
