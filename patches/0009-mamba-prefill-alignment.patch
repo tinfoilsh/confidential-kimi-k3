@@ -1,0 +1,32 @@
+--- a/usr/local/lib/python3.12/dist-packages/vllm/v1/core/sched/scheduler.py
++++ b/usr/local/lib/python3.12/dist-packages/vllm/v1/core/sched/scheduler.py
+@@ -386,6 +386,20 @@
+             and self.kv_cache_manager.mamba_shared_prefix_checkpoint
+         )
+ 
++        # Recurrent checkpoints follow the Mamba grid even when a drafter has
++        # smaller cache blocks.
++        mamba_state_block_sizes = {
++            group.kv_cache_spec.block_size
++            for group in kv_cache_config.kv_cache_groups
++            if isinstance(group.kv_cache_spec, MambaSpec)
++        }
++        assert len(mamba_state_block_sizes) <= 1, (
++            "Mamba align scheduling requires one recurrent state block size"
++        )
++        self.mamba_state_block_size = next(
++            iter(mamba_state_block_sizes), self.cache_config.block_size
++        )
++
+         # Counts of non-empty steps scheduled / processed. update_from_output
+         # is called once per scheduled step in FIFO order, so these stay in sync.
+         self.sched_step_seq = 0
+@@ -437,7 +451,7 @@
+         if start >= prefill_end:
+             return num_new_tokens
+ 
+-        block_size = self.cache_config.block_size
++        block_size = self.mamba_state_block_size
+         # The last block-aligned position whose state can be cached. With
+         # Eagle, FullAttn prunes the last matching block, so back off one
+         # block to avoid a Mamba cache miss.
