@@ -73,7 +73,7 @@ containers:
         "32",
         "--enable-prefix-caching",
         "--prefix-match-unit",
-        "128",
+        "64",
         "--mamba-cache-mode",
         "align",
         "--no-enable-flashinfer-autotune",
