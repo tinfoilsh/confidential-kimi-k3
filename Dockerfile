@@ -17,6 +17,7 @@ ENV VLLM_DISABLE_UVA=1 \
 # 0001 selects explicit device copies for confidential computing;
 # 0008 keeps generated FlashInfer headers in the writable cache.
 # 0009 aligns prefill chunks with the recurrent-state cache blocks.
+# 0010 keeps speculative scratch slots out of reusable recurrent checkpoints.
 COPY patches/ /tmp/tinfoil-patches/
 RUN set -eux; \
     test "$VLLM_BUILD_COMMIT" = "db9527a46873454610df6dbedf79a36d6bf1a7f6"; \
