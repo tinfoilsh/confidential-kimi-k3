@@ -23,8 +23,6 @@ containers:
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
       - FLASHINFER_NO_DOWNLOAD: "1"
       - NUMBA_CACHE_DIR: "/root/numba-cache"
-      - RUNAI_STREAMER_MEMORY_LIMIT: "4294967296"
-      - RUNAI_STREAMER_CONCURRENCY: "8"
       # Peer-mapped all-reduce workspaces (symm mem, FlashInfer IPC/MNNVL) are
       # unsafe under TDX CC. vLLM 0.29 turned FlashInfer AR on by default and
       # does not gate it behind --disable-custom-all-reduce, so disable it here.
@@ -61,7 +59,7 @@ containers:
         "--port",
         "8001",
         "--load-format",
-        "runai_streamer",
+        "fastsafetensors",
         "--trust-remote-code",
         "--trust-request-mm-kwargs",
         "--disable-custom-all-reduce",
