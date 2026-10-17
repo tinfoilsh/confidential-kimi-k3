@@ -12,13 +12,14 @@ from vllm.v1.request import Request
 
 DRAFT_BLOCK_SIZE = 64
 MAMBA_BLOCK_SIZE = 1664
-PREFILL_BUDGET = 8192
+PREFILL_BUDGET = 16384
+CHUNK_BUDGETS = (PREFILL_BUDGET // 2, PREFILL_BUDGET)
 PROMPT_TOKENS = 26978
 OUTPUT_LIMIT = 1024
 
 
 class MambaChunkAlignmentTest(unittest.TestCase):
-    def split(self, cache_block_size, start):
+    def split(self, cache_block_size, start, budget):
         spec = MambaSpec(
             block_size=MAMBA_BLOCK_SIZE,
             shapes=((1, 1),),
@@ -45,21 +46,23 @@ class MambaChunkAlignmentTest(unittest.TestCase):
         )
         request.num_computed_tokens = start
         return Scheduler._mamba_block_aligned_split(
-            scheduler, request, PREFILL_BUDGET
+            scheduler, request, budget
         )
 
     def test_prefill_ends_on_a_recurrent_state_boundary(self):
-        expected = PREFILL_BUDGET // MAMBA_BLOCK_SIZE * MAMBA_BLOCK_SIZE
-        for cache_block_size in (DRAFT_BLOCK_SIZE, MAMBA_BLOCK_SIZE):
-            with self.subTest(cache_block_size=cache_block_size):
-                self.assertEqual(self.split(cache_block_size, 0), expected)
+        for budget in CHUNK_BUDGETS:
+            expected = budget // MAMBA_BLOCK_SIZE * MAMBA_BLOCK_SIZE
+            for cache_block_size in (DRAFT_BLOCK_SIZE, MAMBA_BLOCK_SIZE):
+                with self.subTest(cache_block_size=cache_block_size, budget=budget):
+                    self.assertEqual(self.split(cache_block_size, 0, budget), expected)
 
     def test_partial_resume_stops_at_the_next_recurrent_state_boundary(self):
         start = MAMBA_BLOCK_SIZE + DRAFT_BLOCK_SIZE
         expected = MAMBA_BLOCK_SIZE - DRAFT_BLOCK_SIZE
-        for cache_block_size in (DRAFT_BLOCK_SIZE, MAMBA_BLOCK_SIZE):
-            with self.subTest(cache_block_size=cache_block_size):
-                self.assertEqual(self.split(cache_block_size, start), expected)
+        for budget in CHUNK_BUDGETS:
+            for cache_block_size in (DRAFT_BLOCK_SIZE, MAMBA_BLOCK_SIZE):
+                with self.subTest(cache_block_size=cache_block_size, budget=budget):
+                    self.assertEqual(self.split(cache_block_size, start, budget), expected)
 
 
 if __name__ == "__main__":
