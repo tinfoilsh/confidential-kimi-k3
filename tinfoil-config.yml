@@ -35,7 +35,7 @@ containers:
         "--model",
         "/tinfoil/mpk/mpk-58d5e74ba6c814d4cc4511df093ede786bfbc95f766eee7a96379687ce455792",
         "--speculative-config",
-        '{"model":"/tinfoil/mpk/mpk-e99380779c9921cfdf2dff4ca3b711cda3cc0195e25d9b17633fd191f0ed849c","method":"dspark","num_speculative_tokens":8,"draft_sample_method":"probabilistic","rejection_sample_method":"block"}',
+        '{"model":"/tinfoil/mpk/mpk-e99380779c9921cfdf2dff4ca3b711cda3cc0195e25d9b17633fd191f0ed849c","method":"dspark","num_speculative_tokens":8,"draft_sample_method":"probabilistic","rejection_sample_method":"block","disable_eagle_block_drop":true}',
         "--kv-cache-dtype",
         "fp8",
         "--attention-config",
