@@ -1,0 +1,17 @@
+--- a/usr/local/lib/python3.12/dist-packages/vllm/v1/core/single_type_kv_cache_manager.py
++++ b/usr/local/lib/python3.12/dist-packages/vllm/v1/core/single_type_kv_cache_manager.py
+@@ -1879,12 +1879,12 @@
+                         [self._null_block for _ in range(prev_block_len, null_end)]
+                     )
+ 
+-                if blocks_allocated and not checkpoint_block:
++                if blocks_allocated:
+                     # Relocate exclusively owned speculative scratch blocks.
+                     for block_idx in range(
+                         prev_block_len - self.num_speculative_blocks, prev_block_len
+                     ):
+-                        if block_idx < num_skipped_blocks:
++                        if block_idx < num_skipped_blocks - checkpoint_block:
+                             self._relocate_speculative_block(req_blocks, block_idx)
+                         else:
+                             break
